@@ -17,8 +17,13 @@ class APIManager {
 
         // Print the userID to the Xcode logs
         print("Sending message for userID:", userID)
-        
-        let bodyData = "text=\(text)&user_id=\(userID)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        var completeText = text
+                if let name = UserDefaults.standard.string(forKey: "userName") {
+                    completeText = "My name is \(name). \(text)"
+                }
+
+                let bodyData = "text=\(completeText)&user_id=\(userID)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+
         request.httpBody = bodyData?.data(using: .utf8)
         
         URLSession.shared.dataTask(with: request) { data, response, error in

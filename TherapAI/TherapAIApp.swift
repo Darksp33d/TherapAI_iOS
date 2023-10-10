@@ -1,21 +1,29 @@
-//
-//  TherapAIApp.swift
-//  TherapAI
-//
-//  Created by Iman Shalizi on 10/8/23.
-//
-
 import SwiftUI
 
 @main
 struct TherapAIApp: App {
+    @State private var showSplashScreen = true
+
     init() {
         setupUserID()
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()  // or whatever your main content view is named
+            ZStack {
+                if showSplashScreen {
+                    SplashScreenView {
+                        withAnimation {
+                            self.showSplashScreen = false
+                        }
+                    }
+                    .transition(.opacity)
+                    .zIndex(1)
+                    .opacity(showSplashScreen ? 1 : 0) // Control visibility
+                } else {
+                    ContentView()
+                }
+            }
         }
     }
 

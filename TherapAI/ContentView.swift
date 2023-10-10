@@ -11,146 +11,152 @@ struct ContentView: View {
     @State private var isWaitingForResponse: Bool = false
     @State private var isMenuVisible: Bool = false
     @State private var navigateToAboutMe: Bool = false
-
-    @ObservedObject private var keyboard = KeyboardResponder()
+    
+    let menuWidth: CGFloat = UIScreen.main.bounds.width * 0.6  // Set it to 70% of the screen width
 
     var body: some View {
-            NavigationView {
-                ZStack(alignment: .leading) {
-                    GeometryReader { geometry in
-                        VStack {
-                            ScrollView {
-                                ScrollViewReader { proxy in
-                                    LazyVStack(spacing: 10) {
-                                        ForEach(chatMessages) { message in
-                                            MessageView(message: message)
-                                                .id(message.id)
-                                        }
-                                        if isWaitingForResponse {
-                                            HStack {
-                                                TypingIndicatorView()
-                                                    .padding()
-                                                    .background(Color.gray.opacity(0.1))
-                                                    .cornerRadius(10)
-                                                Spacer()
-                                            }
-                                        }
-                                        if keyboard.currentHeight > 0 {
-                                            Spacer()
-                                                .frame(height: keyboard.currentHeight)
-                                        }
-                                    }
-                                    .padding(.vertical)
-                                    .onChange(of: chatMessages) { _ in
-                                        if let lastMessage = chatMessages.last {
-                                            proxy.scrollTo(lastMessage.id, anchor: .bottom)
-                                        }
-                                    }
+        NavigationView {
+            ZStack(alignment: .leading) {
+                Color("background").edgesIgnoringSafeArea(.all)  // <-- Modern background color
+                
+                VStack {
+                    ScrollView {
+                        ScrollViewReader { proxy in
+                            LazyVStack(spacing: 12) {
+                                ForEach(chatMessages) { message in
+                                    MessageView(message: message)
+                                        .id(message.id)
+                                }
+                                if isWaitingForResponse {
+                                    TypingIndicatorView()
+                                        .padding(8)
+                                        .background(RoundedRectangle(cornerRadius: 10).fill(Color("bubbleBackground")))
+                                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
                                 }
                             }
-                            .frame(width: UIScreen.main.bounds.width * 0.9)
-                            .background(Color.white)
-                            .cornerRadius(15)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                            )
-                            
-                            HStack {
-                                TextField("Enter your message...", text: $userInput)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                Button(action: sendMessage) {
-                                    Text("Send")
+                            .onChange(of: chatMessages) { _ in
+                                if let lastMessage = chatMessages.last {
+                                    proxy.scrollTo(lastMessage.id, anchor: .bottom)
                                 }
                             }
-                            .padding(.bottom, keyboard.currentHeight > 0 ? 20 : 10)
-                            .padding([.top, .leading, .trailing])
-                        }
-                        .onTapGesture {
-                            UIApplication.shared.endEditing()
                         }
                     }
-                    .offset(x: isMenuVisible ? UIScreen.main.bounds.width / 3 : 0)
-
-
-                    if isMenuVisible {
-                        SideMenuView(closeAction: {
-                            withAnimation(.spring()) {
-                                self.isMenuVisible.toggle()
-                            }
-                        }, navigateToAboutMe: $navigateToAboutMe)
-                        .frame(width: UIScreen.main.bounds.width / 3)
-                        .background(Color.gray)
-                        .transition(.move(edge: .leading))
+                    
+                    HStack {
+                        TextField("Enter your message...", text: $userInput)
+                            .padding(10)
+                            .background(RoundedRectangle(cornerRadius: 15).fill(Color("bubbleBackground")))
+                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                            .foregroundColor(Color("textColor"))
+                        Button(action: sendMessage) {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .font(.title2)
+                                .foregroundColor(Color("accentColor"))
+                        }
                     }
+                    .padding(.horizontal, 15)
                 }
-                .navigationBarItems(leading:
-                    Button(action: {
+                .offset(x: isMenuVisible ? menuWidth : 0)
+                .animation(.spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0))
+                
+                if isMenuVisible {
+                    SideMenuView(closeAction: {
                         withAnimation {
-                            self.isMenuVisible.toggle()
+                            self.isMenuVisible = false
                         }
-                    }) {
-                        Image(systemName: "line.horizontal.3")
-                            .font(.title)
-                            .padding()
-                    }
-                )
-                .background(NavigationLink("", destination: AboutMeView(), isActive: $navigateToAboutMe))
+                    }, navigateToAboutMe: $navigateToAboutMe)
+                    .frame(width: menuWidth)
+                    .transition(.move(edge: .leading))
+                    .zIndex(2)
+                }
             }
+            .navigationBarItems(leading:
+                Button(action: {
+                    withAnimation {
+                        self.isMenuVisible.toggle()
+                    }
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .font(.title)
+                        .padding()
+                        .foregroundColor(Color("iconColor"))
+                }
+            )
+            .background(NavigationLink("", destination: AboutMeView(), isActive: $navigateToAboutMe))
         }
+        .edgesIgnoringSafeArea(.all)  // This ensures the navigation view takes the entire screen width
+        .accentColor(Color("accentColor"))
+        }
+    
+    
+    
     
     func sendMessage() {
         guard !userInput.isEmpty else { return }
-
+        
         // Append user's message without animation.
         let userMessage = ChatMessage(id: UUID(), text: userInput, sender: .user)
         chatMessages.append(userMessage)
-
+        
         // Delay before showing typing indicator
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             // Display typing indicator.
             self.isWaitingForResponse = true
         }
-
+        
         // Call API.
         APIManager.shared.postMessage(text: userInput) { response in
             DispatchQueue.main.async {
                 let responseText = response ?? "Sorry, I couldn't understand that."
                 let responseMessage = ChatMessage(id: UUID(), text: responseText, sender: .gpt)
-
+                
                 withAnimation {
                     self.chatMessages.append(responseMessage)
                     self.isWaitingForResponse = false
                 }
             }
         }
-
+        
         userInput = ""
     }
-}
-
-struct MessageView: View {
-    var message: ChatMessage
     
-    var body: some View {
-        HStack(spacing: 15) {  // <-- Increase spacing between messages
-            if message.sender == .gpt {
-                Text(message.text)
-                    .padding(8)  // <-- Decreased padding for smaller bubbles
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(8)  // <-- Smaller corner radius
-                    .modifier(FadeInModifier())
-                Spacer()
-            } else {
-                Spacer()
-                Text(message.text)
-                    .padding(8)  // <-- Decreased padding for smaller bubbles
-                    .background(Color.blue.opacity(0.5))  // <-- User message background color
-                    .cornerRadius(8)  // <-- Smaller corner radius
-                    .modifier(FadeInModifier())
+    
+    struct MessageView: View {
+        var message: ChatMessage
+        
+        var body: some View {
+            HStack {
+                if message.sender == .gpt {
+                    Text(message.text)
+                        .padding(10)
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Color("bubbleBackground")))
+                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                        .foregroundColor(Color("textColor"))
+                    Spacer()
+                } else {
+                    Spacer()
+                    Text(message.text)
+                        .padding(10)
+                        .background(RoundedRectangle(cornerRadius: 10).fill(Color("userBubbleBackground")))
+                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+                        .foregroundColor(Color("userTextColor"))
+                }
             }
+            .padding(.horizontal, 15)
         }
-        .padding(.horizontal, 10)  // <-- Increase distance from the edge
+    }
+    
+    
+    struct ChatMessage: Identifiable, Equatable {
+        let id: UUID
+        let text: String
+        let sender: Sender
+    }
+    
+    struct ContentView_Previews: PreviewProvider {
+        static var previews: some View {
+            ContentView()
+        }
     }
 }
 
@@ -174,22 +180,25 @@ struct FadeInModifier: ViewModifier {
             }
     }
 }
-
-struct ChatMessage: Identifiable, Equatable {
-    let id: UUID
-    let text: String
-    let sender: Sender
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+    
+    extension UIApplication {
+        func endEditing() {
+            sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
+        
+        
     }
+
+extension Color {
+    static let background = Color("background")
+    static let bubbleBackground = Color("bubbleBackground")
+    static let textColor = Color("textColor")
+    static let userBubbleBackground = Color("userBubbleBackground")
+    static let userTextColor = Color("userTextColor")
+    static let accentColor = Color("accentColor")
+    static let iconColor = Color("iconColor")
+    // ... add other colors as needed
 }
 
-extension UIApplication {
-    func endEditing() {
-        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-}
+    
 

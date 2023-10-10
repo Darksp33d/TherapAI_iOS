@@ -14,6 +14,7 @@
 		736A94BB2AD38CE300C4C108 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 736A94BA2AD38CE300C4C108 /* Assets.xcassets */; };
 		736A94BE2AD38CE300C4C108 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 736A94BD2AD38CE300C4C108 /* Preview Assets.xcassets */; };
 		736A94C92AD38DE800C4C108 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736A94C82AD38DE800C4C108 /* APIManager.swift */; };
+		739C15392AD512F8005688EC /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739C15382AD512F8005688EC /* SplashScreenView.swift */; };
 		73E192022AD46A34002698FE /* SideMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E192012AD46A34002698FE /* SideMenuView.swift */; };
 		73E192042AD46A79002698FE /* AboutMeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E192032AD46A79002698FE /* AboutMeView.swift */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,7 @@
 		736A94BA2AD38CE300C4C108 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		736A94BD2AD38CE300C4C108 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		736A94C82AD38DE800C4C108 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		739C15382AD512F8005688EC /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		73E192012AD46A34002698FE /* SideMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuView.swift; sourceTree = "<group>"; };
 		73E192032AD46A79002698FE /* AboutMeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutMeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,6 +72,7 @@
 				73195EAD2AD393D200CB0F75 /* TypingIndicatorView.swift */,
 				73E192012AD46A34002698FE /* SideMenuView.swift */,
 				73E192032AD46A79002698FE /* AboutMeView.swift */,
+				739C15382AD512F8005688EC /* SplashScreenView.swift */,
 			);
 			path = TherapAI;
 			sourceTree = "<group>";
@@ -159,6 +162,7 @@
 				73195EB02AD3999800CB0F75 /* KeyboardResponder.swift in Sources */,
 				73E192042AD46A79002698FE /* AboutMeView.swift in Sources */,
 				73195EAE2AD393D200CB0F75 /* TypingIndicatorView.swift in Sources */,
+				739C15392AD512F8005688EC /* SplashScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
