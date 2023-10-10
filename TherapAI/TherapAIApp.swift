@@ -9,9 +9,22 @@ import SwiftUI
 
 @main
 struct TherapAIApp: App {
+    init() {
+        setupUserID()
+    }
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView()  // or whatever your main content view is named
+        }
+    }
+
+    func setupUserID() {
+        let userDefaults = UserDefaults.standard
+        if userDefaults.object(forKey: "userUUIDHash") == nil {
+            let uuid = UUID()
+            let uniqueIntID = uuid.uuidString.hashValue
+            userDefaults.set(uniqueIntID, forKey: "userUUIDHash")
         }
     }
 }

@@ -9,126 +9,173 @@ struct ContentView: View {
     @State private var userInput: String = ""
     @State private var chatMessages: [ChatMessage] = []
     @State private var isWaitingForResponse: Bool = false
+    @State private var isMenuVisible: Bool = false
+    @State private var navigateToAboutMe: Bool = false
 
     @ObservedObject private var keyboard = KeyboardResponder()
 
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                // Chat Box t
-                ScrollView {
-                    LazyVStack(spacing: 10) {
-                        ForEach(chatMessages) { message in
-                            MessageView(message: message)
-                        }
-                        if isWaitingForResponse {
-                            HStack {
-                                TypingIndicatorView()
-                                    .padding()
-                                    .background(Color.gray.opacity(0.1))
-                                    .cornerRadius(10)
-                                Spacer()
+            NavigationView {
+                ZStack(alignment: .leading) {
+                    GeometryReader { geometry in
+                        VStack {
+                            ScrollView {
+                                ScrollViewReader { proxy in
+                                    LazyVStack(spacing: 10) {
+                                        ForEach(chatMessages) { message in
+                                            MessageView(message: message)
+                                                .id(message.id)
+                                        }
+                                        if isWaitingForResponse {
+                                            HStack {
+                                                TypingIndicatorView()
+                                                    .padding()
+                                                    .background(Color.gray.opacity(0.1))
+                                                    .cornerRadius(10)
+                                                Spacer()
+                                            }
+                                        }
+                                        if keyboard.currentHeight > 0 {
+                                            Spacer()
+                                                .frame(height: keyboard.currentHeight)
+                                        }
+                                    }
+                                    .padding(.vertical)
+                                    .onChange(of: chatMessages) { _ in
+                                        if let lastMessage = chatMessages.last {
+                                            proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                                        }
+                                    }
+                                }
                             }
+                            .frame(width: UIScreen.main.bounds.width * 0.9)
+                            .background(Color.white)
+                            .cornerRadius(15)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                            )
+                            
+                            HStack {
+                                TextField("Enter your message...", text: $userInput)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                Button(action: sendMessage) {
+                                    Text("Send")
+                                }
+                            }
+                            .padding(.bottom, keyboard.currentHeight > 0 ? 20 : 10)
+                            .padding([.top, .leading, .trailing])
+                        }
+                        .onTapGesture {
+                            UIApplication.shared.endEditing()
                         }
                     }
-                    .padding(.vertical)
-                }
-                .frame(width: UIScreen.main.bounds.width * 0.9)
-                .background(Color.white)
-                .cornerRadius(15)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 15)
-                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                )
-                .padding(.bottom, 10)
+                    .offset(x: isMenuVisible ? UIScreen.main.bounds.width / 3 : 0)
 
-                // Message Input
-                HStack {
-                    TextField("Enter your message...", text: $userInput)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    Button(action: sendMessage) {
-                        Text("Send")
+
+                    if isMenuVisible {
+                        SideMenuView(closeAction: {
+                            withAnimation(.spring()) {
+                                self.isMenuVisible.toggle()
+                            }
+                        }, navigateToAboutMe: $navigateToAboutMe)
+                        .frame(width: UIScreen.main.bounds.width / 3)
+                        .background(Color.gray)
+                        .transition(.move(edge: .leading))
                     }
                 }
-                .padding([.top, .leading, .trailing])
-            }
-            .padding(.bottom, keyboard.currentHeight + 20)
-            .onTapGesture {
-                UIApplication.shared.endEditing()
+                .navigationBarItems(leading:
+                    Button(action: {
+                        withAnimation {
+                            self.isMenuVisible.toggle()
+                        }
+                    }) {
+                        Image(systemName: "line.horizontal.3")
+                            .font(.title)
+                            .padding()
+                    }
+                )
+                .background(NavigationLink("", destination: AboutMeView(), isActive: $navigateToAboutMe))
             }
         }
-        .edgesIgnoringSafeArea(.bottom)
-    }
     
     func sendMessage() {
         guard !userInput.isEmpty else { return }
-        
+
         // Append user's message without animation.
         let userMessage = ChatMessage(id: UUID(), text: userInput, sender: .user)
         chatMessages.append(userMessage)
 
-        // Display typing indicator.
-        isWaitingForResponse = true
+        // Delay before showing typing indicator
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            // Display typing indicator.
+            self.isWaitingForResponse = true
+        }
 
         // Call API.
         APIManager.shared.postMessage(text: userInput) { response in
             DispatchQueue.main.async {
                 let responseText = response ?? "Sorry, I couldn't understand that."
                 let responseMessage = ChatMessage(id: UUID(), text: responseText, sender: .gpt)
-                
+
                 withAnimation {
                     self.chatMessages.append(responseMessage)
                     self.isWaitingForResponse = false
                 }
             }
         }
-        
+
         userInput = ""
     }
 }
 
 struct MessageView: View {
     var message: ChatMessage
-    @State private var isVisible: Bool = false
     
     var body: some View {
-        HStack {
+        HStack(spacing: 15) {  // <-- Increase spacing between messages
             if message.sender == .gpt {
                 Text(message.text)
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 10)
+                    .padding(8)  // <-- Decreased padding for smaller bubbles
                     .background(Color.gray.opacity(0.1))
-                    .cornerRadius(10)
+                    .cornerRadius(8)  // <-- Smaller corner radius
                     .modifier(FadeInModifier())
                 Spacer()
             } else {
                 Spacer()
                 Text(message.text)
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 10)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(10)
+                    .padding(8)  // <-- Decreased padding for smaller bubbles
+                    .background(Color.blue.opacity(0.5))  // <-- User message background color
+                    .cornerRadius(8)  // <-- Smaller corner radius
                     .modifier(FadeInModifier())
             }
         }
+        .padding(.horizontal, 10)  // <-- Increase distance from the edge
     }
 }
 
 struct FadeInModifier: ViewModifier {
     @State private var isVisible: Bool = false
+    var delay: Double  // Add a delay property
+    
+    init(delay: Double = 0) {
+        self.delay = delay
+    }
     
     func body(content: Content) -> some View {
         content
             .opacity(isVisible ? 1 : 0)
             .onAppear {
-                withAnimation(.easeIn(duration: 0.4)) {
-                    isVisible = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {  // Add the delay here
+                    withAnimation(.easeIn(duration: 0.4)) {
+                        isVisible = true
+                    }
                 }
             }
     }
 }
 
-struct ChatMessage: Identifiable {
+struct ChatMessage: Identifiable, Equatable {
     let id: UUID
     let text: String
     let sender: Sender
@@ -145,3 +192,4 @@ extension UIApplication {
         sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
+

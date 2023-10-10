@@ -1,20 +1,25 @@
 import SwiftUI
 
 struct TypingIndicatorView: View {
-    @State private var shouldAnimate: Bool = false
-
+    @State private var scaleValues: [CGFloat] = [1, 1, 1]
+    
     var body: some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 3) {
             ForEach(0..<3) { index in
                 Circle()
-                    .frame(width: 10, height: 10)
+                    .frame(width: 6, height: 6)
                     .foregroundColor(Color.gray)
-                    .scaleEffect(self.shouldAnimate && index == 0 ? 1.5 : 1)
-                    .animation(Animation.easeInOut(duration: 0.5).repeatForever().delay(Double(index) * 0.2))
+                    .scaleEffect(self.scaleValues[index])
+                    .modifier(FadeInModifier(delay: 0.4))  // Apply the fade-in effect with a delay
+                    .onAppear {
+                        withAnimation(Animation.easeInOut(duration: 0.5).repeatForever().delay(Double(index) * 0.2)) {
+                            self.scaleValues[index] = 1.4
+                        }
+                    }
+                    .onDisappear {
+                        self.scaleValues[index] = 1
+                    }
             }
-        }
-        .onAppear {
-            self.shouldAnimate = true
         }
     }
 }
