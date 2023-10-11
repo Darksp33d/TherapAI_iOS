@@ -11,6 +11,8 @@ struct ContentView: View {
     @State private var isWaitingForResponse: Bool = false
     @State private var isMenuVisible: Bool = false
     @State private var navigateToAboutMe: Bool = false
+    @State private var navigateToMoodTracker: Bool = false
+
     
     let menuWidth: CGFloat = UIScreen.main.bounds.width * 0.6  // Set it to 70% of the screen width
 
@@ -64,7 +66,7 @@ struct ContentView: View {
                         withAnimation {
                             self.isMenuVisible = false
                         }
-                    }, navigateToAboutMe: $navigateToAboutMe)
+                    }, navigateToAboutMe: $navigateToAboutMe, navigateToMoodTracker: $navigateToMoodTracker)
                     .frame(width: menuWidth)
                     .transition(.move(edge: .leading))
                     .zIndex(2)
@@ -83,6 +85,8 @@ struct ContentView: View {
                 }
             )
             .background(NavigationLink("", destination: AboutMeView(), isActive: $navigateToAboutMe))
+            .background(NavigationLink("", destination: MoodTrackerView(), isActive: $navigateToMoodTracker))
+
         }
         .edgesIgnoringSafeArea(.all)  // This ensures the navigation view takes the entire screen width
         .accentColor(Color("accentColor"))

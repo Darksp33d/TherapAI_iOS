@@ -11,6 +11,8 @@ struct TherapAIApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
+                ContentView()
+
                 if showSplashScreen {
                     SplashScreenView {
                         withAnimation {
@@ -19,9 +21,6 @@ struct TherapAIApp: App {
                     }
                     .transition(.opacity)
                     .zIndex(1)
-                    .opacity(showSplashScreen ? 1 : 0) // Control visibility
-                } else {
-                    ContentView()
                 }
             }
         }

@@ -3,24 +3,31 @@ import SwiftUI
 struct SideMenuView: View {
     var closeAction: () -> Void
     @Binding var navigateToAboutMe: Bool
+    @Binding var navigateToMoodTracker: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 40) {
-            ForEach(["Chat", "About Me"], id: \.self) { label in
+            ForEach(["Chat", "About Me", "Mood Tracker"], id: \.self) { label in
                 Button(action: {
                     withAnimation(.spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0)) {
-                        if label == "Chat" {
+                        switch label {
+                        case "Chat":
                             closeAction()
-                        } else {
+                        case "About Me":
                             navigateToAboutMe = true
                             closeAction()
+                        case "Mood Tracker":
+                            navigateToMoodTracker = true
+                            closeAction()
+                        default:
+                            break
                         }
                     }
                 }) {
                     Text(label)
                         .font(.system(size: 24, weight: .medium, design: .rounded))
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                        .padding(EdgeInsets(top: 15, leading: 30, bottom: 15, trailing: 50)) // Increased trailing padding
+                        .padding(EdgeInsets(top: 15, leading: 30, bottom: 15, trailing: 50))
                         .background(Color.accentColor.opacity(0.2))
                         .foregroundColor(Color.accentColor)
                         .cornerRadius(15)
