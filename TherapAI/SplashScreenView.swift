@@ -1,47 +1,40 @@
 import SwiftUI
 
-extension AnyTransition {
-    static var fadeAndMoveUp: AnyTransition {
-        AnyTransition.opacity
-            .combined(with: .move(edge: .top))
-    }
-}
-
 struct SplashScreenView: View {
     var completion: () -> Void
 
     @State private var typedText = ""
-    @State private var isTypingComplete = false
-    @State private var shouldTransition = false // Control the transition
+    @State private var blurIntensity: CGFloat = 5.0
+    @State private var textOpacity: Double = 1.0
+    @State private var blurVisible: Bool = true
 
     var body: some View {
         ZStack {
-            ContentView() // Display ContentView below the splash screen
+            ContentView()
+                .blur(radius: blurVisible ? blurIntensity : 0)
 
-            VStack {
-                Text(typedText)
-                    .font(.largeTitle)
-                    .foregroundColor(.white)
-                    .onAppear {
-                        animateText()
+            Text(typedText)
+                .font(.largeTitle)
+                .foregroundColor(Color("accentColor"))
+                .opacity(textOpacity)
+                .onAppear {
+                    animateText()
+                }
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    textOpacity = 0
+                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+                    withAnimation(.easeOut(duration: 0.5)) {
+                        blurVisible = false
                     }
 
-                if !isTypingComplete {
-                    Circle()
-                        .frame(width: 10, height: 10)
-                        .foregroundColor(.white)
-                        .opacity(shouldTransition ? 0 : 1)
-                        .animation(Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: false))
-                }
-            }
-        }
-        .blur(radius: isTypingComplete ? 0 : 5.0) // Apply the blur effect
-        .opacity(shouldTransition ? 0 : 1) // Initial opacity (starts visible)
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                shouldTransition = true // Activate the transition after 2 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    completion() // Trigger transition to ContentView after 1 second
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                        completion()
+                    }
                 }
             }
         }
@@ -50,14 +43,20 @@ struct SplashScreenView: View {
     func animateText() {
         let fullText = "therapAI"
         let characters = Array(fullText)
-        var currentIndex = 0 // Track the current character index
+        var currentIndex = 0
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
             if currentIndex < characters.count {
                 typedText.append(characters[currentIndex])
                 currentIndex += 1
             } else {
                 timer.invalidate()
-                isTypingComplete = true
+
+                // Begin fading text out of view after it finishes typing
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        textOpacity = 0
+                    }
+                }
             }
         }
     }

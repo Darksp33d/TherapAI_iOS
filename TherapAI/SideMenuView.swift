@@ -3,37 +3,38 @@ import SwiftUI
 struct SideMenuView: View {
     var closeAction: () -> Void
     @Binding var navigateToAboutMe: Bool
+    @Binding var navigateToJournalMain: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 40) {
-            ForEach(["Chat", "About Me"], id: \.self) { label in
+        VStack(alignment: .leading, spacing: 25) {
+            ForEach(["Chat", "About Me", "Journal"], id: \.self) { label in
                 Button(action: {
                     withAnimation(.spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0)) {
-                        if label == "Chat" {
-                            closeAction()
-                        } else {
-                            navigateToAboutMe = true
-                            closeAction()
+                        switch label {
+                            case "Chat": closeAction()
+                            case "About Me":
+                                navigateToAboutMe = true
+                                closeAction()
+                            case "Journal":
+                                navigateToJournalMain = true
+                                closeAction()
+                            default: break
                         }
                     }
                 }) {
                     Text(label)
-                        .font(.system(size: 24, weight: .medium, design: .rounded))
+                        .font(.system(size: 22, weight: .semibold, design: .rounded))
                         .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                        .padding(EdgeInsets(top: 15, leading: 30, bottom: 15, trailing: 50)) // Increased trailing padding
-                        .background(Color.accentColor.opacity(0.2))
-                        .foregroundColor(Color.accentColor)
-                        .cornerRadius(15)
-                        .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 8)
+                        .padding(EdgeInsets(top: 10, leading: 30, bottom: 10, trailing: 30))
+                        .foregroundColor(Color.accentColor.opacity(0.8))
                 }
             }
             Spacer()
         }
-        .padding(.top, 20) // Reduced top padding
-        .padding([.leading, .trailing], 20)  // Horizontal padding to the VStack
-        .frame(width: UIScreen.main.bounds.width * 0.6)
+        .padding(.top, 50)
+        .padding([.leading, .trailing], 25)
+        .frame(width: UIScreen.main.bounds.width * 0.55)
         .background(Color.background.edgesIgnoringSafeArea(.all))
-        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 5, y: 0)
+        .shadow(color: Color.black.opacity(0.15), radius: 15, x: -5, y: 0)
     }
 }
-

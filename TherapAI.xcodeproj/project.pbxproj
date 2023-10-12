@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		73195EAE2AD393D200CB0F75 /* TypingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73195EAD2AD393D200CB0F75 /* TypingIndicatorView.swift */; };
 		73195EB02AD3999800CB0F75 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73195EAF2AD3999800CB0F75 /* KeyboardResponder.swift */; };
+		7343FC862AD658D80099D4EC /* JournalEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7343FC852AD658D80099D4EC /* JournalEntryView.swift */; };
+		7343FC882AD659100099D4EC /* JournalEntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7343FC872AD659100099D4EC /* JournalEntriesView.swift */; };
+		7343FC8A2AD661FF0099D4EC /* JournalMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7343FC892AD661FF0099D4EC /* JournalMainView.swift */; };
 		736A94B72AD38CC700C4C108 /* TherapAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736A94B62AD38CC700C4C108 /* TherapAIApp.swift */; };
 		736A94B92AD38CC700C4C108 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736A94B82AD38CC700C4C108 /* ContentView.swift */; };
 		736A94BB2AD38CE300C4C108 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 736A94BA2AD38CE300C4C108 /* Assets.xcassets */; };
@@ -22,6 +25,9 @@
 /* Begin PBXFileReference section */
 		73195EAD2AD393D200CB0F75 /* TypingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingIndicatorView.swift; sourceTree = "<group>"; };
 		73195EAF2AD3999800CB0F75 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
+		7343FC852AD658D80099D4EC /* JournalEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryView.swift; sourceTree = "<group>"; };
+		7343FC872AD659100099D4EC /* JournalEntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntriesView.swift; sourceTree = "<group>"; };
+		7343FC892AD661FF0099D4EC /* JournalMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalMainView.swift; sourceTree = "<group>"; };
 		736A94B32AD38CC700C4C108 /* TherapAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TherapAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		736A94B62AD38CC700C4C108 /* TherapAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TherapAIApp.swift; sourceTree = "<group>"; };
 		736A94B82AD38CC700C4C108 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -73,6 +79,9 @@
 				73E192012AD46A34002698FE /* SideMenuView.swift */,
 				73E192032AD46A79002698FE /* AboutMeView.swift */,
 				739C15382AD512F8005688EC /* SplashScreenView.swift */,
+				7343FC852AD658D80099D4EC /* JournalEntryView.swift */,
+				7343FC872AD659100099D4EC /* JournalEntriesView.swift */,
+				7343FC892AD661FF0099D4EC /* JournalMainView.swift */,
 			);
 			path = TherapAI;
 			sourceTree = "<group>";
@@ -157,12 +166,15 @@
 			files = (
 				73E192022AD46A34002698FE /* SideMenuView.swift in Sources */,
 				736A94C92AD38DE800C4C108 /* APIManager.swift in Sources */,
+				7343FC8A2AD661FF0099D4EC /* JournalMainView.swift in Sources */,
 				736A94B92AD38CC700C4C108 /* ContentView.swift in Sources */,
 				736A94B72AD38CC700C4C108 /* TherapAIApp.swift in Sources */,
 				73195EB02AD3999800CB0F75 /* KeyboardResponder.swift in Sources */,
 				73E192042AD46A79002698FE /* AboutMeView.swift in Sources */,
+				7343FC862AD658D80099D4EC /* JournalEntryView.swift in Sources */,
 				73195EAE2AD393D200CB0F75 /* TypingIndicatorView.swift in Sources */,
 				739C15392AD512F8005688EC /* SplashScreenView.swift in Sources */,
+				7343FC882AD659100099D4EC /* JournalEntriesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
