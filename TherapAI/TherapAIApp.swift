@@ -19,7 +19,7 @@ struct TherapAIApp: App {
                     }
                     .transition(.opacity)
                     .zIndex(1)
-                    .opacity(showSplashScreen ? 1 : 0) // Control visibility
+                    .opacity(showSplashScreen ? 1 : 0)
                 } else {
                     ContentView()
                 }
