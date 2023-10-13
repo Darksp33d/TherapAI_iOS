@@ -26,23 +26,23 @@ struct JournalMainView: View {
                 
                 VStack {
                     Text("My Journal")
-                        .font(.system(size: 45, weight: .bold, design: .default)) // Updated font size and weight
-                        .foregroundColor(Color.textColor) // Changed color to emphasize
-                        .padding(.bottom, 60) // Added more bottom padding for emphasis
+                        .font(.system(size: 45, weight: .bold, design: .default)) 
+                        .foregroundColor(Color.textColor) 
+                        .padding(.bottom, 60) 
                     
                     VStack {
                         Text("\"\(dailyQuote.text)\"")
-                            .font(.title2) // Changed to title2 for a smaller font size
+                            .font(.title2) 
                             .fontWeight(.light)
-                            .foregroundColor(Color.gray.opacity(0.8)) // Made the quote color more subtle
+                            .foregroundColor(Color.gray.opacity(0.8)) 
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 10)
 
                         Text("- \(dailyQuote.author)")
-                            .font(.subheadline) // Updated to a smaller font for the author
+                            .font(.subheadline) p
                             .fontWeight(.ultraLight)
-                            .foregroundColor(Color.gray.opacity(0.7)) // Made the author color even more subtle
+                            .foregroundColor(Color.gray.opacity(0.7))
                     }
                     .padding(.bottom, 50)
 
@@ -82,8 +82,7 @@ struct JournalMainView: View {
 
 
     func loadDailyQuote() {
-        // In reality, this would be fetched from a backend or API
-        // For the sake of the example, we'll use a random quote from our mockQuotes array
+        //TODO: Create a backend solution for this, quotes array is temporary for now
         if let randomQuote = mockQuotes.randomElement() {
             dailyQuote = randomQuote
         }
