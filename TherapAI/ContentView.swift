@@ -13,12 +13,12 @@ struct ContentView: View {
     @State private var navigateToAboutMe: Bool = false
     @State private var navigateToJournalMain: Bool = false
 
-    let menuWidth: CGFloat = UIScreen.main.bounds.width * 0.6  // Set it to 70% of the screen width
+    let menuWidth: CGFloat = UIScreen.main.bounds.width * 0.6  
 
     var body: some View {
         NavigationView {
             ZStack(alignment: .leading) {
-                Color("background").edgesIgnoringSafeArea(.all)  // <-- Modern background color
+                Color("background").edgesIgnoringSafeArea(.all) 
                 
                 VStack {
                     ScrollView {
@@ -87,7 +87,7 @@ struct ContentView: View {
             .background(NavigationLink("", destination: AboutMeView(), isActive: $navigateToAboutMe))
             .background(
                 NavigationLink("", destination: JournalMainView(), isActive: $navigateToJournalMain)
-                    .hidden() // Hide the NavigationLink
+                    .hidden() 
             )
         }
         .edgesIgnoringSafeArea(.all)  // This ensures the navigation view takes the entire screen width
@@ -168,7 +168,7 @@ struct ContentView: View {
 
 struct FadeInModifier: ViewModifier {
     @State private var isVisible: Bool = false
-    var delay: Double  // Add a delay property
+    var delay: Double 
     
     init(delay: Double = 0) {
         self.delay = delay
@@ -178,7 +178,7 @@ struct FadeInModifier: ViewModifier {
         content
             .opacity(isVisible ? 1 : 0)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {  // Add the delay here
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {  
                     withAnimation(.easeIn(duration: 0.4)) {
                         isVisible = true
                     }
@@ -203,7 +203,7 @@ extension Color {
     static let userTextColor = Color("userTextColor")
     static let accentColor = Color("accentColor")
     static let iconColor = Color("iconColor")
-    // ... add other colors as needed
+    
 }
 
     
