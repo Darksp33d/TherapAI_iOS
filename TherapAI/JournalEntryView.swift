@@ -23,8 +23,8 @@ struct JournalEntryView: View {
                     }
                     
                     TextEditor(text: $journalContent)
-                        .background(Color.background) // Set the background color to match
-                        .clipShape(RoundedRectangle(cornerRadius: 20)) // Add this to match the rounded shape of the border
+                        .background(Color.background) 
+                        .clipShape(RoundedRectangle(cornerRadius: 20)) 
                 }
                 .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.accentColor, lineWidth: 2))
                 .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
