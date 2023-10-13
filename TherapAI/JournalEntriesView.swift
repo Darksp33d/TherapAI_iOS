@@ -18,12 +18,12 @@ struct JournalEntriesView: View {
                 .padding(.top)
             
             ScrollView {
-                VStack(spacing: 25) {  // Increased spacing
+                VStack(spacing: 25) { 
                     ForEach(entries) { entry in
                         Button(action: {
                             selectedEntry = entry
                         }) {
-                            VStack(alignment: .leading) {  // Aligned to the left
+                            VStack(alignment: .leading) { 
                                 Text(entry.content)
                                     .font(.body)
                                     .lineLimit(2)
@@ -45,7 +45,7 @@ struct JournalEntriesView: View {
                 .padding()
             }
         }
-        .background(Color.background)  // Set the background color
+        .background(Color.background) 
         .onAppear {
             APIManager.shared.getJournalEntries { fetchedEntries in
                 self.entries = fetchedEntries.map { JournalEntry(date: $0.date, content: $0.content) }
@@ -62,7 +62,7 @@ struct FullJournalEntryView: View {
     var entry: JournalEntry
 
     var body: some View {
-        VStack(alignment: .leading) {  // Aligned to the left
+        VStack(alignment: .leading) { 
             Text(entry.date)
                 .font(.headline)
                 .padding()
@@ -70,9 +70,9 @@ struct FullJournalEntryView: View {
             ScrollView {
                 Text(entry.content)
                     .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)  // Aligned to the left
+                    .frame(maxWidth: .infinity, alignment: .leading)  
             }
         }
-        .background(Color.background)  // Set the background color
+        .background(Color.background) 
     }
 }
